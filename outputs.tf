@@ -2,5 +2,5 @@
 # Outputs
 # ------------------------------------------------------------------------------
 output "hostname" {
-  value = cloudflare_record.ipv4.hostname
+  value = cloudflare_record.main[*].hostname
 }
