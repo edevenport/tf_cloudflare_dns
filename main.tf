@@ -24,22 +24,15 @@ data "cloudflare_zone" "domain" {
 # ------------------------------------------------------------------------------
 # Resources
 # ------------------------------------------------------------------------------
-resource "cloudflare_record" "ipv4" {
-  zone_id         = data.cloudflare_zone.domain.id
-  name            = var.hostname
-  value           = var.ipv4_address
-  ttl             = var.proxied ? 1 : 60
-  proxied         = var.proxied ? true : false
-  type            = "A"
-  allow_overwrite = true
-}
+resource "cloudflare_record" "main" {
+  count = length(var.records)
 
-resource "cloudflare_record" "ipv6" {
   zone_id         = data.cloudflare_zone.domain.id
-  name            = var.hostname
-  value           = var.ipv6_address
-  ttl             = var.proxied ? 1 : 60
-  proxied         = var.proxied ? true : false
-  type            = "AAAA"
-  allow_overwrite = true
+  allow_overwrite = false
+
+  name    = var.records[count.index].hostname
+  value   = var.records[count.index].ip_address
+  type    = var.records[count.index].type
+  proxied = var.records[count.index].proxied
+  ttl     = var.records[count.index].proxied ? 1 : var.records[count.index].ttl
 }

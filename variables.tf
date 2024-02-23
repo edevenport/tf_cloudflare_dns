@@ -7,19 +7,14 @@ variable "domain_name" {
   type = string
 }
 
-variable "hostname" {
-  type = string
-}
-
-variable "ipv4_address" {
-  type = string
-}
-
-variable "ipv6_address" {
-  type = string
-}
-
-variable "proxied" {
-  type    = bool
-  default = false
+variable "records" {
+  description = "List of DNS domain records."
+  type = list(object({
+    hostname   = string
+    ip_address = string
+    type       = string
+    ttl        = optional(string, "60")
+    proxied    = optional(bool, false)
+  }))
+  default = []
 }
